@@ -4,7 +4,7 @@ This is a personal JavaScript repo where I dump code experiments. Its just anoth
 
 ## Files
 
-### createArray.js
+### [createArray.js](./createArray.js)
 A simple custom array-like object implementation. Supports basic methods like:
 - `push(item)` — adds an item to the end.
 - `pop()` — removes and returns the last item.
