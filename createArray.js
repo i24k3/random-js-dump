@@ -6,7 +6,7 @@
 function createArray (data = {}) {
     if (Array.isArray(data)) return console.log("only support object or params as input");
 
-    let _data = {}
+    let _data = {};
     let _length;
 
     if (typeof data !== "object" || data === null) {
@@ -32,7 +32,7 @@ function createArray (data = {}) {
         },
 
         pop:() => {
-            if (_length === 0) return undefined;
+            if (_length === 0) return;
             _length--;
             const value = _data[_length];
             delete _data[_length];
@@ -55,16 +55,18 @@ function createArray (data = {}) {
             }
             delete _data[_length - 1];
             return first;
+        },
+
+        at (index) {
+            if (index < 0) return 
+            return _data[index];
         }
+
     }
 }
 
 
-// const arr = createArray({0:11, 1:22, 2:33, 3:44, 4:55});
 const arr = createArray(1, 2, 3, 4,55);
-// const arr = createArray();
-const data = arr.shift();
 console.log(arr);
-console.log("data: ",data);
-// console.log(`arr[2]: ${arr.data[2]}`);
+console.log(arr.at(2));
 
