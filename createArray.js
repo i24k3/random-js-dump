@@ -1,4 +1,7 @@
 "use strict";
+/* 
+ * Bounds: create array without using arrays, implement array methods allow chaining.
+ * */
 
 function createArray (data = {}) {
     if (Array.isArray(data)) return console.log("only support object or params as input");
@@ -34,15 +37,16 @@ function createArray (data = {}) {
             return value;
         },
 
-        filter : (cb) => {
-            const result = createArray();
+        filter (cb) {
+            const res = {};
             for (let i = 0; i < _length; i++) {
-                if(cb(_data[i])) result.push(_data[i]);
+                if(cb(_data[i])) res[i] = _data[i];
             }
-            return result;
+            return createArray(res);
         }
     }
 }
+
 
 // const arr = createArray({0:11, 1:22, 2:33, 3:44, 4:55});
 const arr = createArray(1, 2, 3, 4,55);
