@@ -58,7 +58,7 @@ function createArray (data = {}) {
         },
 
         at (index) {
-            if (index < 0) return 
+            if (index < 0) return _data[_length + index];
             return _data[index];
         }
 
