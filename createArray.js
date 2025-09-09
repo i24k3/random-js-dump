@@ -19,6 +19,8 @@ function createArray (data = {}) {
         _length = Object.keys(data).length;
         _data= data;
     }
+
+
     return {
         get length() {return _length},
 
@@ -43,6 +45,16 @@ function createArray (data = {}) {
                 if(cb(_data[i])) res[i] = _data[i];
             }
             return createArray(res);
+        },
+
+        shift () {
+            const first = _data[0];
+
+            for (let i = 0; i < _length; i++) {
+                _data[i] = _data[i+1]
+            }
+            delete _data[_length - 1];
+            return first;
         }
     }
 }
@@ -51,6 +63,8 @@ function createArray (data = {}) {
 // const arr = createArray({0:11, 1:22, 2:33, 3:44, 4:55});
 const arr = createArray(1, 2, 3, 4,55);
 // const arr = createArray();
+const data = arr.shift();
 console.log(arr);
-console.log(`arr[2]: ${arr.data[2]}`);
+console.log("data: ",data);
+// console.log(`arr[2]: ${arr.data[2]}`);
 
