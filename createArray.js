@@ -7,9 +7,8 @@ function createArray (data = {}) {
     let _length;
 
     if (typeof data !== "object" || data === null) {
-        for (let i = 1; i < arguments.length; i++) {
-            const index = i - 1;
-            _data[index] = arguments[i];
+        for (let i = 0; i < arguments.length; i++) {
+            _data[i] = arguments[i];
         }
         _length = arguments.length;
 
@@ -45,9 +44,9 @@ function createArray (data = {}) {
     }
 }
 
-const arr = createArray({0:11, 1:22, 2:33, 3:44, 4:55});
-// const arr = createArray(1, 2, 3, 4,55);
+// const arr = createArray({0:11, 1:22, 2:33, 3:44, 4:55});
+const arr = createArray(1, 2, 3, 4,55);
+// const arr = createArray();
 console.log(arr);
-console.log("length: ",arr.length);
-console.log("data: ",arr.data);
+console.log(`arr[2]: ${arr.data[2]}`);
 
