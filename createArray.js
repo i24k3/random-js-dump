@@ -6,67 +6,66 @@
 function createArray (data = {}) {
     if (Array.isArray(data)) return console.log("only support object or params as input");
 
-    let _data = {};
-    let _length;
+    let returnData = {};
+    let length;
 
     if (typeof data !== "object" || data === null) {
         for (let i = 0; i < arguments.length; i++) {
-            _data[i] = arguments[i];
+            returnData[i] = arguments[i];
         }
-        _length = arguments.length;
+        length = arguments.length;
 
     } else {
-        _length = Object.keys(data).length;
-        _data= data;
+        length = Object.keys(data).length;
+        returnData= data;
     }
 
 
-    return {
-        get length() {return _length},
+    return Object.freeze(Object.seal({
+        get length() {return length},
 
-        data: _data,
+        data: returnData,
 
         push:(item) => {
-            _data[_length]= item;
-            _length++;
+            returnData[length]= item;
+            length++;
         },
 
         pop:() => {
-            if (_length === 0) return;
-            _length--;
-            const value = _data[_length];
-            delete _data[_length];
+            if (length === 0) return;
+            const value = returnData[length];
+            delete returnData[length];
+            length--;
             return value;
         },
 
         filter (cb) {
             const res = {};
-            for (let i = 0; i < _length; i++) {
-                if(cb(_data[i])) res[i] = _data[i];
+            for (let i = 0; i < length; i++) {
+                if(cb(returnData[i])) res[i] = returnData[i];
             }
             return createArray(res);
         },
 
         shift () {
-            const first = _data[0];
+            const first = returnData[0];
 
-            for (let i = 0; i < _length; i++) {
-                _data[i] = _data[i+1]
+            for (let i = 0; i < length; i++) {
+                returnData[i] = returnData[i+1]
             }
-            delete _data[_length - 1];
+            delete returnData[length - 1];
+            length--;
             return first;
         },
 
         at (index) {
-            if (index < 0) return _data[_length + index];
-            return _data[index];
+            if (index < 0) return returnData[length + index];
+            if (index > length) throw new RangeError(`Index out of bounds, index: ${index}`);
+            return returnData[index];
         }
 
-    }
+    }));
 }
 
-
-const arr = createArray(1, 2, 3, 4,55);
-console.log(arr);
-console.log(arr.at(2));
+module.exports = createArray;
 
