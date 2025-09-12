@@ -42,7 +42,7 @@ function createArray (data = {}) {
     }
 
 
-    return Object.freeze(Object.seal({
+    const api = {
         get length() {return length},
 
         data: returnData,
@@ -54,7 +54,7 @@ function createArray (data = {}) {
 
         pop:() => {
             if (length === 0) return;
-            const value = returnData[length];
+            const value = returnData[length - 1];
             delete returnData[length - 1];
             length--;
             return value;
@@ -69,6 +69,7 @@ function createArray (data = {}) {
         },
 
         shift () {
+            if (length === 0) return;
             const first = returnData[0];
 
             for (let i = 0; i < length; i++) {
@@ -76,6 +77,7 @@ function createArray (data = {}) {
             }
             delete returnData[length - 1];
             length--;
+
             return first;
         },
 
@@ -85,7 +87,8 @@ function createArray (data = {}) {
             return returnData[index];
         }
 
-    }));
+    }
+    return Object.freeze(Object.seal(api));
 }
 
 module.exports = createArray;
