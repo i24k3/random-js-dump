@@ -4,20 +4,26 @@
  * */
 
 function createArray (data = {}) {
-    if (Array.isArray(data)) return console.log("only support object or params as input");
+    if (Array.isArray(data)) throw new TypeError("only support object or params as input");
 
     let returnData = {};
     let length;
 
     if (typeof data !== "object" || data === null) {
-        for (let i = 0; i < arguments.length; i++) {
-            returnData[i] = arguments[i];
+        if (arguments.length === 1 && typeof arguments[0] === 'number') {
+            length = arguments[0];
+        } 
+        else {
+
+            for (let i = 0; i < arguments.length; i++) {
+                returnData[i] = arguments[i];
+                length = arguments.length;
+            }
         }
-        length = arguments.length;
 
     } else {
         length = Object.keys(data).length;
-        returnData= data;
+        returnData= Object.assign({}, data);
     }
 
 
@@ -34,7 +40,7 @@ function createArray (data = {}) {
         pop:() => {
             if (length === 0) return;
             const value = returnData[length];
-            delete returnData[length];
+            delete returnData[length - 1];
             length--;
             return value;
         },
