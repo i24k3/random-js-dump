@@ -1,8 +1,23 @@
+/* TODO: create array without using arrays, implement array methods allow chaining. */
 "use strict";
-/* 
- * Bounds: create array without using arrays, implement array methods allow chaining.
- * */
 
+/**
+ * @param {number | object} [data] - can be:
+ * - A single number: cretes a holey (empty) array of that length.
+ * - An Object treated as the initial data.
+ * - multiple arguments ...args, treated as initial data.
+ * - leave empty: creates an empty array without any data.
+ *
+ * @returns {{
+ *   length: number,
+ *   data: object,
+ *   push: (item: any) => void,
+ *   pop: () => any,
+ *   filter: (callback: (value: any, index: number) => boolean) => object,
+ *   shift: () => any,
+ *   at: (index: number) => any
+ * }} A custom sealed, frozen object that of array.
+ * */
 function createArray (data = {}) {
     if (Array.isArray(data)) throw new TypeError("only support object or params as input");
 
