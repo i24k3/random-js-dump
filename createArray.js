@@ -15,7 +15,7 @@
  *   filter: (callback: (value: any, index: number) => boolean) => object,
  *   shift: () => any,
  *   at: (index: number) => any
- * }} A custom sealed, frozen object that of array.
+ * }} A custom object that of array.
  * */
 function createArray (data = {}) {
     if (Array.isArray(data)) throw new TypeError("only support object or params as input");
@@ -72,9 +72,9 @@ function createArray (data = {}) {
 
     Object.defineProperty(api, "filter", {
         value: function(cb) {
-            const res = {};
+            const res = createArray();
             for (let i = 0; i < length; i++) {
-                if(cb(api[i], i)) res[Object.keys(res).length] = api[i];
+                if(cb(api[i], i)) res.push(api[i]);
             }
             return createArray(res);
         },
