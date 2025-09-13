@@ -10,7 +10,6 @@
  *
  * @returns {{
  *   length: number,
- *   data: object,
  *   push: (item: any) => void,
  *   pop: () => any,
  *   filter: (callback: (value: any, index: number) => boolean) => object,
@@ -21,74 +20,93 @@
 function createArray (data = {}) {
     if (Array.isArray(data)) throw new TypeError("only support object or params as input");
 
-    let returnData = {};
+    const api = {};
     let length;
 
     if (typeof data !== "object" || data === null) {
+        // if single param was provided - create a holey object of same size
         if (arguments.length === 1 && typeof arguments[0] === 'number') {
             length = arguments[0];
-        } 
-        else {
-
+        } else {
+            // if multiple arguments were passed treat them as the inital values
             for (let i = 0; i < arguments.length; i++) {
-                returnData[i] = arguments[i];
-                length = arguments.length;
+                api[i] = arguments[i];
             }
+            length = arguments.length;
         }
 
     } else {
-        length = Object.keys(data).length;
-        returnData= Object.assign({}, data);
+        // if non null object were passed copy its value by key order
+        const keys = Object.keys(data);
+        for (let i = 0; i < keys.length; i++) {
+            api[i] = data[i];
+        }
+        length = keys.length;
     }
 
+    Object.defineProperty(api, "length", {
+        get(){return length},
+        enumerable: false,
+    });
 
-    const api = {
-        get length() {return length},
-
-        data: returnData,
-
-        push:(item) => {
-            returnData[length]= item;
+    Object.defineProperty(api, "push", {
+        value: function (data) {
+            api[length] = data;
             length++;
+            return length;
         },
+        enumerable: false,
+    });
 
-        pop:() => {
+    Object.defineProperty(api, "pop", {
+        value: function(value = "") {
+            if (value) throw new Error("Pop dosn't take input params");
             if (length === 0) return;
-            const value = returnData[length - 1];
-            delete returnData[length - 1];
+            value = api[length - 1];
+            delete api[length - 1];
             length--;
             return value;
         },
+        enumerable: false,
+    });
 
-        filter (cb) {
+    Object.defineProperty(api, "filter", {
+        value: function(cb) {
             const res = {};
             for (let i = 0; i < length; i++) {
-                if(cb(returnData[i])) res[i] = returnData[i];
+                if(cb(api[i], i)) res[Object.keys(res).length] = api[i];
             }
             return createArray(res);
         },
+        enumerable: false,
+    });
 
-        shift () {
+    Object.defineProperty(api, "shift", {
+        value: function () {
             if (length === 0) return;
-            const first = returnData[0];
+            const first = api[0];
 
             for (let i = 0; i < length; i++) {
-                returnData[i] = returnData[i+1]
+                api[i] = api[i+1]
             }
-            delete returnData[length - 1];
+            delete api[length - 1];
             length--;
 
             return first;
         },
+        enumerable: false,
+    });
 
-        at (index) {
-            if (index < 0) return returnData[length + index];
-            if (index > length) throw new RangeError(`Index out of bounds, index: ${index}`);
-            return returnData[index];
-        }
+    Object.defineProperty(api, "at", {
+        value: function (index) {
+            if (index < 0) return api[length + index];
+            if (index >= length) throw new RangeError(`Index out of bounds, index: ${index}`);
+            return api[index];
+        },
+        enumerable: false,
+    });
 
-    }
-    return Object.freeze(Object.seal(api));
+    return api;
 }
 
 module.exports = createArray;
