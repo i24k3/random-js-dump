@@ -2,21 +2,26 @@
 "use strict";
 
 /**
- * @param {number | object} [data] - can be:
- * - A single number: cretes a holey (empty) array of that length.
- * - An Object treated as the initial data.
- * - multiple arguments ...args, treated as initial data.
- * - leave empty: creates an empty array without any data.
- *
+ * Creates a custom array-like object with basic array methods.
+ * 
+ * @param {number | object | any[]} [data] - Initial data to populate the object:
+ *   - If a single number is passed, creates a holey object with that length (empty slots).
+ *   - If an object is passed, copies its indexed properties by key order.
+ *   - If multiple arguments are passed, treats them as initial values.
+ *   - If nothing is passed, creates an empty object.
+ * 
  * @returns {{
  *   length: number,
- *   push: (item: any) => void,
+ *   push: (item: any) => number,
  *   pop: () => any,
  *   filter: (callback: (value: any, index: number) => boolean) => object,
  *   shift: () => any,
- *   at: (index: number) => any
- * }} A custom object that of array.
- * */
+ *   at: (index: number) => any,
+ *   map: (callback: (value: any, index: number, obj: object) => any, thisArg?: any) => object
+ * }} Custom array-like object supporting common array methods.
+ * 
+ * Methods behave similarly to native arrays but work on this object structure.
+ */
 function createArray (data = {}) {
     if (Array.isArray(data)) throw new TypeError("only support object or params as input");
 
@@ -76,7 +81,7 @@ function createArray (data = {}) {
             for (let i = 0; i < length; i++) {
                 if(cb(api[i], i)) res.push(api[i]);
             }
-            return createArray(res);
+            return res;
         },
         enumerable: false,
     });
@@ -102,6 +107,19 @@ function createArray (data = {}) {
             if (index < 0) return api[length + index];
             if (index >= length) throw new RangeError(`Index out of bounds, index: ${index}`);
             return api[index];
+        },
+        enumerable: false,
+    });
+
+    Object.defineProperty(api, "map", {
+        value: function(cb = "", thisArg) {
+            if (typeof cb !== 'function') 
+                throw new TypeError("Map takes argument as a callback function");
+
+            const res = createArray();
+            for (let i = 0; i < length; i++) res.push(cb.call(thisArg, api[i], i, api));
+
+            return res;
         },
         enumerable: false,
     });
