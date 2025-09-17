@@ -124,6 +124,21 @@ function createArray (data = {}) {
         enumerable: false,
     });
 
+    Object.defineProperty(api, "from", {
+        value: function (param, cb, thisArg) {
+            const res = createArray();
+            if (param === null) throw new TypeError("Cannot convert null or undefined to object");
+            const isFn = typeof cb === 'function';
+
+            for (let i = 0; i < param.length; i++) {
+                res.push(isFn? cb.call(thisArg, param[i], i): param[i]);
+            }
+            return res;
+        },
+        enumerable: false,
+    });
+
+
     return api;
 }
 
